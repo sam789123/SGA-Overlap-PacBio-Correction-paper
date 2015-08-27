@@ -1,0 +1,161 @@
+\chapter{Material and Results}
+
+\section{Comparison of time complexity and running time}
+
+
+In this paragraph, we summarized the time complexity of each step of our correction in comparison with SGA correction in figure~\ref{timecomplexity}. The major differences between our correction and SGA correction are steps 3 and 4. In step 3, we improved the time complexity from $O(CR^{2}d)$ to $O(CRrd)$, where $R>>r$. In reality, $R$ is roughly ranges from 4000 bp to 16,000 bp, and $r$ is equivalent to ~100bp. In step 4, the time complexity is improved from $O(CR^2)$ to $O(CRr)$.
+
+We sampled ten PacBio reads from real data of $C elegans$ and investigated the real running time of the four steps (see Figure~\ref{timecomplexityonrealdata}). The running time of step 3 improves significantly and that of step 4 slightly improves in comparison with those of original SGA correction. 
+
+\newpage
+
+\begin{figure} [h]
+\centering
+\includegraphics[scale=0.45]{Figures/chapter4/timecomplexity.png}
+\caption{The time complexity of SGA correction and our correction}
+\label{timecomplexity}
+\end{figure}
+
+\begin{figure} [h]
+\centering
+\includegraphics[scale=0.5]{Figures/chapter4/timecomplexityonRealdata.png}
+\caption{Comparison of the real running time with SGA correction for each step}
+\label{timecomplexityonrealdata}
+\end{figure}
+
+\section{Material}
+
+We used three data sets composed of both short reads (from Illumina sequencing) and PacBio reads (from PacBio sequencing) to assess our correction (see Table~\ref{thedataset}). The first two data sets are from the same $E coli.$ strain, where the PacBio read length differs a lot owing to usage of old and new chemistry. The third data set contains both Illumina and PacBio sequencing reads from a larger genome $C. elegans$.
+%The average length of the first \textit{E.coli} dataset is 3,981 bp, the maximum length is 14,494 bp and the coverage is 20 times. 
+%The average length of the second dataset is 13,660 bp, the maximum length is approximately 50,000 bp, and the coverage is 140 times. 
+%The average length of sampled \textit{C elegans} is 16,718 bp. The datasets was performed by SGA overlap correction, PacBioToCA, and our correction.
+
+\newpage
+
+\section{Results on the First Data Set}
+%many seeds with frequency-> many short reads with frequency of k-mer
+%sample seeds-> samples short reads
+In the first data set, the running time of SGA correction is faster than our method (Table~\ref{resultOffirstDataset}), whereas PacBioToCA is the slowest. In terms of accuracy, PacBioToCA is higher than ours, whereas SGA is the lowest. The running time of our method didn't outperform SGA as expected, which is due to the ultra high coverage of Illumina sequencing. SGA gives up many short reads with frequency of $k$-mer larger than 200, while our method uniformly samples short reads across the entire PacBio read. Therefore, although SGA gains speed, it sacrifices accuracy in comparison with our method. In addition, the PacBio reads are relatively shorter (i.e., ~4000bp owing to usage of earlier chemistry), and the performance improvement of our method is not significant.
+
+\section{Results on the Second Data Set}
+
+In the second data set, the PacBio reads are much longer and sequencing coverage are relatively lower compared with the first data set. Table~\ref{resultOfsecondDataset} lists the running time and accuracy of corrected PacBio reads. The results indicate that our method is the fastest, SGA is the second, and PacBioToCA is the slowset. In terms of accuracy, PacBioToCA is still the highest, our method is the second, and SGA is the lowest. The speedup of our method compared with SGA can be revealed in this data set owing to longer PacBio read and lower Illumina sequencing coverage. 
+
+\section{Results on the Third Data Set}
+%PacBioToCA still can't finish by the time of writing this manuscript-> PacBioToCA continued to correct PacBio reads for four days but it still can't finish
+In the third data set, all programs can not finish execution within a reasonable period of time and we down-sample the PacBio reads to 4,790. PacBioToCA continued to correct PacBio reads for four days but it still can't finish. The results indicate our method is much more efficient than SGA (Table~\ref{resultOfthirdDataset}). This is due to an ordinary Illumina sequencing coverage and much longer PacBio reads of this data set. And the accuracy of our method is higher than that of SGA. 
+
+\newpage
+
+\begin{table}[h]
+\centering
+\caption{The datasets}
+\label{thedataset}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+\textbf{} & \textbf{Average length (bp)} & \textbf{Maximum length (bp)} & \textbf{Number of read} & \textbf{Sequencing throughput (bp)} & \textbf{Coverage} \\ \midrule
+The first set of E.coli \\
+PacBio reads & 3,981 & 14,494 & 35,161 & 94.3 M & 20.5  \\
+Short reads & 102 & 102 & 44.8 M & 4,531 M & 985 \\ \midrule
+The second set of E.coli \\
+PacBio reads & 13,660 & 49,424 & 144,960 & 644 M & 140 \\
+Short reads & 100  & 100  & 28.4 M & 2,840 M & 617  \\ \midrule
+C elegans \\
+PacBio reads & 16,591 & 44,883 & 4,790 & 51 M & 0.5\\ 
+Short reads reads & 110  & 110  & 133 M & 14,640 M & 146 \\ \bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{The comparison of the performance and the accuracy for the first dataset of E.coli}
+\label{resultOffirstDataset}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{} & \textbf{Raw data} & \textbf{PacBioToCA} & \textbf{SGA correction} & \textbf{My correction} \\ \midrule
+Running time (hour) & - & 33.41 & 0.33 & 1.33 \\ 
+Peak memory usage (Mb) & - & 74,279 & 1,055 & 11,949 \\ 
+Number of read & 35,161 & 107,409 & 35,161 & 35,161 \\
+Number of PacBio read aligned on reference & 31,971 & 107,283 & 31,971 & 31,990 \\ 
+Identity (\%) & 83.57 & 99.83 & 87.01 & 93.23 \\
+Average length (bp) & 4,083 & 1,536 & 4,029 & 4,037 \\
+Maximum length (bp) & 14,494 & 10,925 & 14,452 & 14,452 \\ \bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{The comparison of the performance and the accuracy for the second dataset of E.coli}
+\label{resultOfsecondDataset}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{} & \textbf{Raw data} & \textbf{PacBioToCA} & \textbf{SGA correction} & \textbf{My correction} \\ \midrule
+Running time (hour) & - & 44 & 9 & 5.5 \\ 
+Peak memory usage (Mb) & - & 156,212 & 628 & 6,782 \\ 
+Number of read & 144,960 & 427,109 & 144,960 & 144,960 \\
+Number of PacBio read aligned on reference & 48,207 & 427,007 & 48,223 & 49,750 \\
+Identity (\%) & 84.58 & 99.87 & 84.98 & 94.30 \\
+Average length (bp) & 13,660 & 3,360 & 13,635 & 13,660 \\
+Maximum length (bp) & 20,749 & 25,709 & 20,722 & 20,749 \\ \bottomrule
+\end{tabular}
+}
+\end{table}
+
+%\begin{table}[h]
+%\centering
+%\begin{threeparttable} 
+%\caption{The comparison of the performance and the accuracy for C elegans}
+%\label{resultOfthirdDataset}
+%\resizebox{\textwidth}{!}{%
+%\begin{tabular}{@{}lrrrr@{}}
+%\toprule
+%\textbf{} & \textbf{Raw data} & \textbf{PacBioToCA} \tnote{a} & \textbf{SGA correction} & \textbf{My correction} \\ \midrule
+%Runnin time (hour) & - & - & 19.10 & 0.75 \\ 
+%Memory usage (Mb) & - & - & 3,311 & 31,732 \\ 
+%Number of read & 4,790 & - & 4,790 & 4,790 \\
+%Number of PacBio read aligned on reference & 4,729 & - & 4,729 & 4,731 \\ 
+%Identity (\%) & 87.81 & - & 87.90 & 96.38 \\
+%Average length (bp) & 16,591 & - & 16,572 & 16,521 \\
+%Maximun length (bp) & 44,883 & - & 44,833 & 44,841 \\
+%\end{tabular}
+%\begin{tablenotes}  
+%\item[a] 123
+%\end{tablenotes} 
+%}
+%\end{threeparttable} 
+%\end{table}
+
+%\begin{document}
+
+\begin{table}[htbp]  
+\centering  
+\begin{threeparttable}
+\caption{The comparison of the performance and the accuracy for C elegans}  
+{
+\label{resultOfthirdDataset}
+\scriptsize 
+\setlength\tabcolsep{3pt} 
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+\textbf{} & \textbf{Raw data} & \tnote{*} \textbf{PacBioToCA} & \textbf{SGA correction} & \textbf{My correction} \\ \midrule
+Running time (hour) & - & - & 19.10 & 0.75 \\ 
+Peak memory usage (Mb) & - & - & 3,311 & 31,732 \\ 
+Number of read & 4,790 & - & 4,790 & 4,790 \\
+Number of PacBio read aligned on reference & 4,729 & - & 4,729 & 4,731 \\ 
+Identity (\%) & 87.81 & - & 87.90 & 96.38 \\
+Average length (bp) & 16,591 & - & 16,572 & 16,521 \\
+Maximum length (bp) & 44,883 & - & 44,833 & 44,841 \\ \bottomrule
+\end{tabular}   
+\begin{tablenotes}  
+\item[*] Comparison with other methods, it took too much time (up to four days) so it's not necessary to finish it.
+\end{tablenotes}  
+}  
+\end{threeparttable}  
+\end{table}  
+
+%\end{document}

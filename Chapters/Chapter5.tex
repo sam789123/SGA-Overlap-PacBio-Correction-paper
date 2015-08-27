@@ -1,0 +1,7 @@
+\chapter{Conclusion and Future Works}
+
+\section{Summary}
+PacBio reads have the advantage of scaffolding de novo assemblies but they usually have high error rate. Before making use of PacBio reads, it is important to correct them. In this study, we improved the performance and accuracy of SGA correction for PacBio reads. Our correction filtered out short reads sharing common $k$-mer with PacBio reads from total short reads, aligned short reads on PacBio reads, which used banded dynamic programming, and replaced errors of PacBio reads by major allele. The experimental results showed that Our correction is faster than SGA correction and PacBioToCA, which also correct PacBio reads by alignment, according to the average length of PacBio reads. Besides, our correction has higher accuracies than raw data and SGA correction.
+
+\section{Future Works}
+In this section, we propose some possible directions for future research. After we improved the performance of SGA correction, there are still some sequencing errors, which were not mentioned previously. For instance, chimera reads~\cite{Koren2012}. This may cause misassemblies so solving this error has the higher priority in the future research.
